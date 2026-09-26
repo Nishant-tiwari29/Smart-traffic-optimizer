@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <title>Smart Traffic Route Optimizer</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#home"><span class="brand-icon">↗</span><span>Flow<span class="brand-light">cast</span><small>INTELLIGENT MOBILITY</small></span></a>
+    <div class="nav-caption">WORKSPACE</div>
+    <nav>
+      <a class="nav-item active" href="#home">⌂ <span>Overview</span></a>
+      <a class="nav-item" href="#optimizer">◎ <span>Route optimizer</span></a>
+      <a class="nav-item" href="#simulation">⌁ <span>Traffic simulation</span></a>
+      <a class="nav-item" href="#algorithms">⌘ <span>Algorithm lab</span></a>
+      <a class="nav-item" href="#history">◷ <span>Route history</span></a>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span><div>Network status<small>Simulation online</small></div><span class="live-pill">LIVE</span></div>
+    <div class="profile"><div class="avatar">ST</div><div>Student workspace<small>Major project · v1.0</small></div><span>•••</span></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><div class="eyebrow">SMART MOBILITY PLATFORM <span> / </span> OVERVIEW</div><h1>Traffic intelligence, <em>in motion.</em></h1></div><div class="top-actions"><span class="live-clock"><i></i> SYSTEM LIVE</span><button class="icon-button" aria-label="Notifications">♧</button><div class="avatar small-avatar">ST</div></div></header>
+    <section class="metrics" id="home">
+      <article class="metric-card"><div class="metric-label">INTERSECTIONS <span>⌗</span></div><strong id="intersection-count">—</strong><div class="metric-foot">In active road network</div></article>
+      <article class="metric-card"><div class="metric-label">ROAD SEGMENTS <span>⌁</span></div><strong id="road-count">—</strong><div class="metric-foot">Bidirectional connections</div></article>
+      <article class="metric-card"><div class="metric-label">NETWORK TRAFFIC <span>◉</span></div><strong class="metric-status"><i class="status-dot" id="traffic-dot"></i><span id="traffic-level">—</span></strong><div class="metric-foot"><span id="traffic-average">—</span> average congestion</div></article>
+      <article class="metric-card"><div class="metric-label">ROUTE OPTIONS <span>⤢</span></div><strong id="alternatives-count">—</strong><div class="metric-foot">Distinct alternatives found</div></article>
+    </section>
+    <section class="content-grid" id="optimizer">
+      <article class="panel map-panel"><div class="panel-heading"><div><div class="section-kicker">LIVE NETWORK</div><h2>Route visualization</h2></div><span class="map-label"><i></i> SIMULATED TRAFFIC</span></div><div id="map"></div><div class="map-legend"><span><i class="legend-dot source"></i>Source</span><span><i class="legend-dot destination"></i>Destination</span><span><i class="legend-line optimized"></i>Optimized</span><span><i class="legend-line alt"></i>Alternative</span><span><i class="legend-line traffic"></i>Heavy traffic</span></div></article>
+      <article class="panel route-panel"><div class="panel-heading"><div><div class="section-kicker">OPTIMIZATION ENGINE</div><h2>Plan a journey</h2></div><span class="algorithm-tag">A* SEARCH</span></div>
+        <form id="route-form"><label for="source">ORIGIN</label><select id="source" required></select><label for="destination">DESTINATION</label><select id="destination" required></select>
+          <div class="weight-heading"><span>Cost profile</span><span>Weights · sum to 1</span></div>
+          <div class="weight-grid"><label>Distance<input id="w-distance" type="number" min="0" max="1" step=".05" value=".20"></label><label>Travel time<input id="w-time" type="number" min="0" max="1" step=".05" value=".50"></label><label>Traffic<input id="w-traffic" type="number" min="0" max="1" step=".05" value=".20"></label><label>Road condition<input id="w-condition" type="number" min="0" max="1" step=".05" value=".10"></label></div>
+          <label class="hop-toggle"><input id="hop-enabled" type="checkbox"> Limit road segments (DP)</label><input id="max-hops" class="hop-input" type="number" min="1" max="100" value="4" hidden>
+          <button class="primary-button" type="submit">Find best route <span>↗</span></button><p id="route-error" class="error-message" role="alert"></p>
+        </form>
+        <div class="route-result" id="route-result"><div class="empty-result"><span>⌖</span><strong>Ready to optimize</strong><p>Choose two intersections to compare paths across the live network.</p></div></div>
+      </article>
+    </section>
+    <section class="bottom-grid">
+      <article class="panel options-panel"><div class="panel-heading"><div><div class="section-kicker">PATH COMPARISON</div><h2>Three ways through</h2></div><span class="muted">OBJECTIVE-BASED ROUTING</span></div><div id="route-options" class="route-options"><div class="placeholder">Run an optimization to compare routes.</div></div></article>
+      <article class="panel sim-panel" id="simulation"><div class="panel-heading"><div><div class="section-kicker">WHAT-IF ANALYSIS</div><h2>Simulate congestion</h2></div><span class="sim-icon">⌁</span></div><p>Increase traffic on a road and see how the optimal route responds.</p><form id="simulation-form"><select id="sim-road" aria-label="Road to simulate"></select><label class="range-label">Congestion increase <span id="increase-value">50%</span></label><input id="increase-percent" type="range" min="10" max="200" step="10" value="50"><button type="submit" class="secondary-button">Run simulation <span>→</span></button></form><div id="simulation-result" class="simulation-result"></div></article>
+    </section>
+    <section class="bottom-grid lower-grid" id="algorithms">
+      <article class="panel algorithm-panel"><div class="panel-heading"><div><div class="section-kicker">SEARCH PERFORMANCE</div><h2>Dijkstra vs A*</h2></div><span class="muted">SAME COST MODEL · SAME GRAPH</span></div><div class="comparison-head"><span>ALGORITHM</span><span>EXPLORED</span><span>TIME</span><span>COST</span></div><div id="comparison-rows"><div class="placeholder">Comparison metrics appear after a route search.</div></div><div class="complexity-note">Both searches: <code>O((V + E) log V)</code> worst case · A* uses an admissible straight-line lower bound.</div></article>
+      <article class="panel history-panel" id="history"><div class="panel-heading"><div><div class="section-kicker">RECENT ACTIVITY</div><h2>Route history</h2></div><button id="refresh-history" class="text-button">Refresh ↻</button></div><div id="history-list"><div class="placeholder">Your recent routes will appear here.</div></div></article>
+    </section>
+    <footer>FLOWCAST <span>·</span> DYNAMIC ROUTE OPTIMIZATION <span class="footer-right">OpenStreetMap tiles · simulated traffic data</span></footer>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/js/map.js"></script><script src="/js/route.js"></script><script src="/js/traffic.js"></script><script src="/js/dashboard.js"></script>
+</body>
+</html>

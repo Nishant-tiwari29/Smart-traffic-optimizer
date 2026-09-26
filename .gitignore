@@ -1,0 +1,10 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+cpp/route_engine
+cpp/route_engine.exe
+.pytest_cache/
