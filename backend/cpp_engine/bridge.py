@@ -28,7 +28,7 @@ def compare_with_native(graph: Graph, source: str, destination: str, weights: di
     )
     try:
         result = subprocess.run(
-            [str(Path(executable))],
+            [str(Path(executable).resolve())],
             input="\n".join(lines) + "\n",
             text=True,
             capture_output=True,
